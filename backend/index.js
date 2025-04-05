@@ -3,9 +3,11 @@ import express from "express";
 const app = express();
 import connectToDb from "./config/db.js";
 import userRouter from "./routes/user.route.js";
+import cookieParser from "cookie-parser";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // index route
 app.get("/", (req, res) => {
@@ -16,9 +18,11 @@ app.get("/", (req, res) => {
 app.use("/api", userRouter);
 
 app.use((err, req, res, next) => {
+  console.error("🔥 Error:", err);
+
   return res
     .status(500)
-    .json({ success: false, message: "Internal Server Erorrr" });
+    .json({ success: false, message: "Internal Server Erorr" });
 });
 
 // Starting the server
