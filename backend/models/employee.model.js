@@ -3,23 +3,26 @@ import mongoose, { Schema } from "mongoose";
 import Counter from "./counter.model.js";
 import { DEPARTMENTS, POSITIONS } from "../constants.js";
 
-const employeeSchema = new Schema({
-  employeeId: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  phoneNumber: { type: String },
-  department: {
-    type: String,
-    enum: DEPARTMENTS,
-    required: true,
+const employeeSchema = new Schema(
+  {
+    employeeId: { type: String, unique: true },
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    phoneNumber: { type: String },
+    department: {
+      type: String,
+      enum: DEPARTMENTS,
+      required: true,
+    },
+    position: {
+      type: String,
+      enum: POSITIONS,
+      required: true,
+    },
+    joiningDate: { type: Date, required: true },
   },
-  position: {
-    type: String,
-    enum: POSITIONS,
-    required: true,
-  },
-  joiningDate: { type: Date, required: true },
-});
+  { timestamps: true }
+);
 
 employeeSchema.pre("save", async function (next) {
   if (this.isNew) {
@@ -36,5 +39,5 @@ employeeSchema.pre("save", async function (next) {
   next();
 });
 
-const Emplyoee = mongoose.model("Emplyoee", employeeSchema);
-export default Emplyoee;
+const Employee = mongoose.model("Emplyoee", employeeSchema);
+export default Employee;

@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const counterSchema = new Schema({
-  id: { type: String, required: true },
+  id: { type: String, required: true, unique: true },
   seq: { type: Number, default: 0 },
 });
 

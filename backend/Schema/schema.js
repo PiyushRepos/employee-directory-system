@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DEPARTMENTS, POSITIONS } from "../constants";
+import { DEPARTMENTS, POSITIONS } from "../constants.js";
 
 export const registerSchema = z
   .object({
@@ -47,9 +47,12 @@ export const employeeSchema = z
       .optional(),
     department: z.enum(DEPARTMENTS),
     position: z.enum(POSITIONS),
-    joiningDate: z.date({
-      required_error: "Select a correct joining date",
-      invalid_type_error: "That's not a date. Invalid date type",
-    }),
+    joiningDate: z.preprocess(
+      (val) => new Date(val),
+      z.date({
+        required_error: "Select a correct joining date",
+        invalid_type_error: "That's not a date. Invalid date type",
+      })
+    ),
   })
   .required();
