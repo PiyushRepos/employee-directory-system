@@ -4,4 +4,6 @@ const router = Router();
 
 // prefix - /api
 
-router.post("/register", registerHandler);
+router.route("/register").post(registerHandler);
+
+export default router;
