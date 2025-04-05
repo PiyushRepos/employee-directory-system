@@ -44,12 +44,11 @@ export const registerHandler = catchErrors(async (req, res) => {
       .json({ success: false, message: "Error while registering user" });
   }
 
-  newUser = newUser.toObject();
-  delete newUser.password;
-
-  return res
-    .status(201)
-    .json({ success: true, data: newUser, message: "Registration completed" });
+  return res.status(201).json({
+    success: true,
+    userId: newUser._id,
+    message: "Registration completed",
+  });
 });
 
 export const loginHandler = catchErrors(async (req, res) => {
@@ -122,8 +121,6 @@ export const getCurrentLoggedInUserHandler = catchErrors(async (req, res) => {
       message: "Something went wrong. Internal server error.",
     });
   }
-
-  res.json({ token });
 });
 
 export const logoutHandler = async (req, res) => {
