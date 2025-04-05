@@ -47,7 +47,9 @@ export const registerHandler = catchErrors(async (req, res) => {
   newUser = newUser.toObject();
   delete newUser.password;
 
-  return res.status(200).json({ success: true, data: newUser });
+  return res
+    .status(201)
+    .json({ success: true, data: newUser, message: "Registration completed" });
 });
 
 export const loginHandler = catchErrors(async (req, res) => {
@@ -84,7 +86,7 @@ export const loginHandler = catchErrors(async (req, res) => {
         .json({ success: false, message: "Incorrect password" });
     }
 
-    const accessToken = user.generateAccessToken();
+    const accessToken = await user.generateAccessToken();
 
     const options = {
       httpOnly: true,
@@ -95,14 +97,40 @@ export const loginHandler = catchErrors(async (req, res) => {
 
     const loggedInUser = await User.findById(user._id).select("-password");
 
-    return res
-      .status(200)
-      .cookie("accessToken", accessToken, options)
-      .json({ success: true, data: loggedInUser });
+    return res.status(200).cookie("accessToken", accessToken, options).json({
+      success: true,
+      data: loggedInUser,
+      message: "User logged in successfully",
+    });
   } catch (error) {
     console.log("Error while logging user:", error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error" });
   }
+});
+
+export const getCurrentLoggedInUserHandler = catchErrors(async (req, res) => {
+  try {
+    let { userId } = req.user;
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User does not exits" });
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, data: user, message: "Welcome back" });
+  } catch (error) {
+    console.error("Error while getting logged in user", error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong. Internal server error.",
+    });
+  }
+
+  res.json({ token });
 });
