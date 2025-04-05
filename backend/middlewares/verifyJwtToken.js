@@ -16,8 +16,8 @@ const verifyJwt = async (req, res, next) => {
   } catch (error) {
     console.error("Error while verifying jwt token", error);
     return res
-      .status(400)
-      .json({ success: false, message: "Invalid access token" });
+      .status(401)
+      .json({ success: false, message: "Invalid or expired access token" });
   }
 };
 

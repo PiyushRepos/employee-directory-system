@@ -118,7 +118,7 @@ export const getCurrentLoggedInUserHandler = catchErrors(async (req, res) => {
     if (!user) {
       return res
         .status(404)
-        .json({ success: false, message: "User does not exits" });
+        .json({ success: false, message: "User does not exists" });
     }
 
     return res
@@ -134,3 +134,16 @@ export const getCurrentLoggedInUserHandler = catchErrors(async (req, res) => {
 
   res.json({ token });
 });
+
+export const logoutHandler = async (req, res) => {
+  const options = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "strict" : "none",
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .json({ success: true, message: "User logged out successfully" });
+};
