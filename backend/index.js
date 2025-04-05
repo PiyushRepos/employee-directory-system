@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 const app = express();
 import connectToDb from "./config/db.js";
+import userRouter from "./routes/user.route.js";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -10,6 +11,9 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.json({ status: "Sucesss", message: "All is well." });
 });
+
+// api routes
+app.use("/api", userRouter);
 
 // Starting the server
 const PORT = process.env.PORT || 4000;
