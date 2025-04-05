@@ -3,6 +3,7 @@ import express from "express";
 const app = express();
 import connectToDb from "./config/db.js";
 import userRouter from "./routes/user.route.js";
+import employeeRouter from "./routes/employee.route.js";
 import cookieParser from "cookie-parser";
 
 app.use(express.json());
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 
 // api routes
 app.use("/api", userRouter);
+app.use("/api", employeeRouter);
 
 app.use((err, req, res, next) => {
   console.error("🔥 Error:", err);
