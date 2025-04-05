@@ -15,6 +15,12 @@ app.get("/", (req, res) => {
 // api routes
 app.use("/api", userRouter);
 
+app.use((err, req, res, next) => {
+  return res
+    .status(500)
+    .json({ success: false, message: "Internal Server Erorrr" });
+});
+
 // Starting the server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, async () => {
