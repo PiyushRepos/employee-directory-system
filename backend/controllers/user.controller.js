@@ -112,18 +112,9 @@ export const loginHandler = catchErrors(async (req, res) => {
 
 export const getCurrentLoggedInUserHandler = catchErrors(async (req, res) => {
   try {
-    let { userId } = req.user;
-    const user = await User.findById(userId).select("-password");
-
-    if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User does not exists" });
-    }
-
     return res
       .status(200)
-      .json({ success: true, data: user, message: "Welcome back" });
+      .json({ success: true, data: req.user, message: "Welcome back" });
   } catch (error) {
     console.error("Error while getting logged in user", error);
     res.status(500).json({
