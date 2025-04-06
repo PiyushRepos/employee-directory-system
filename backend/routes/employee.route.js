@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createEmployeeHandler,
+  deleteEmployeeHandler,
   getAllEmployeesHandler,
   getEmployeeByIdHandler,
   updateEmployeeByIdHandler,
@@ -18,6 +19,7 @@ router
 router
   .route("/:id")
   .get(verifyJwt, getEmployeeByIdHandler)
-  .put(verifyJwt, updateEmployeeByIdHandler);
+  .put(verifyJwt, updateEmployeeByIdHandler)
+  .delete(verifyJwt, deleteEmployeeHandler);
 
 export default router;

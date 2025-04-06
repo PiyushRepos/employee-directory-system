@@ -168,3 +168,35 @@ export const updateEmployeeByIdHandler = catchErrors(async (req, res) => {
     data: updatedEmployee,
   });
 });
+
+export const deleteEmployeeHandler = catchErrors(async (req, res) => {
+  if (!req.isAdmin) {
+    return res
+      .status(403)
+      .json({ success: false, message: "Only admins can delete employees" });
+  }
+
+  const id = req.params?.id;
+  let employee;
+
+  if (mongoose.isValidObjectId(id)) {
+    employee = await Employee.findById(id);
+  }
+
+  if (!employee && typeof id === "string" && id.length === 4) {
+    employee = await Employee.findOne({ employeeId: id });
+  }
+
+  if (!employee) {
+    return res.status(404).json({
+      success: false,
+      message: "Employee not found",
+    });
+  }
+
+  await Employee.findByIdAndDelete(employee._id);
+
+  return res
+    .status(200)
+    .json({ success: true, message: "Employee deleted successfully" });
+});
