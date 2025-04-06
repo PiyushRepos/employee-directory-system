@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Employee from "../models/employee.model.js";
 import { employeeSchema, updateEmployeeSchema } from "../Schema/schema.js";
 import catchErrors from "../utils/catchErrors.js";
+import { Parser } from "@json2csv/plainjs";
 
 export const createEmployeeHandler = catchErrors(async (req, res) => {
   if (!req.isAdmin) {
@@ -199,4 +200,59 @@ export const deleteEmployeeHandler = catchErrors(async (req, res) => {
   return res
     .status(200)
     .json({ success: true, message: "Employee deleted successfully" });
+});
+
+export const exportEmployeesDataHandler = catchErrors(async (req, res) => {
+  if (!req.isAdmin) {
+    return res
+      .status(403)
+      .json({ success: false, message: "Only admins can access this route" });
+  }
+
+  const type = req.query?.type?.toLowerCase() || "json";
+
+  const employees = await Employee.find({});
+
+  if (!employees.length) {
+    return res.status(404).json({
+      success: false,
+      message: "No employee data available to export",
+    });
+  }
+
+  const fields = [
+    "employeeId",
+    "name",
+    "email",
+    "phoneNumber",
+    "department",
+    "position",
+    "joiningDate",
+  ];
+
+  if (type === "csv") {
+    try {
+      const opts = { fields };
+      const parser = new Parser(opts);
+      const csv = parser.parse(employees);
+
+      res.header("Content-Type", "text/csv");
+      res.attachment("employees.csv");
+
+      return res.status(200).send(csv);
+    } catch (err) {
+      console.error("Error while parsing CSV", err);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to export CSV",
+      });
+    }
+  }
+
+  res.header("Content-Type", "application/json");
+  return res.status(200).json({
+    success: true,
+    json: employees,
+    message: "Employees data exported successfully",
+  });
 });

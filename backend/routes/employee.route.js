@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createEmployeeHandler,
   deleteEmployeeHandler,
+  exportEmployeesDataHandler,
   getAllEmployeesHandler,
   getEmployeeByIdHandler,
   updateEmployeeByIdHandler,
@@ -15,6 +16,8 @@ router
   .route("/")
   .post(verifyJwt, createEmployeeHandler)
   .get(verifyJwt, getAllEmployeesHandler);
+
+router.route("/export").get(verifyJwt, exportEmployeesDataHandler);
 
 router
   .route("/:id")
