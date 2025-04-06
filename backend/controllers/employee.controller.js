@@ -63,35 +63,41 @@ export const createEmployeeHandler = catchErrors(async (req, res) => {
 });
 
 export const getAllEmployeesHandler = catchErrors(async (req, res) => {
-  const page = Number(req.query.page);
-  const limit = Number(req.query.limit);
+  const {
+    department,
+    position,
+    search,
+    sortBy = "createdAt",
+    order = "desc",
+  } = req.query;
 
-  const validPage = Number.isInteger(page) && page > 0 ? page : 1;
-  const validLimit = Number.isInteger(limit) && limit > 0 ? limit : 10;
-  const skip = (validPage - 1) * validLimit;
+  const filter = {};
 
-  const totalEmployees = await Employee.countDocuments();
-  const pages = Math.ceil(totalEmployees / validLimit);
+  if (department) filter.department = department;
+  if (position) filter.position = position;
 
-  if (validPage > pages && pages !== 0) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Select a valid page" });
+  if (search) {
+    filter.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { email: { $regex: search, $options: "i" } },
+    ];
   }
 
-  const employees = await Employee.find().skip(skip).limit(validLimit);
+  const sortOrder = order === "asc" ? 1 : -1;
+
+  const employees = await Employee.find(filter).sort({ [sortBy]: sortOrder });
+
+  if (employees.length === 0) {
+    return res.status(200).json({
+      success: true,
+      message: "There are no employees in the database",
+      data: employees,
+    });
+  }
 
   return res.status(200).json({
-    pagination: {
-      total: totalEmployees,
-      page: validPage,
-      limit: validLimit,
-      pages,
-    },
     success: true,
-    message: employees.length
-      ? "Employee data retrieved successfully"
-      : "There are no employees in the database",
+    message: "Employee data retrieved successfully",
     data: employees,
   });
 });
