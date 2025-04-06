@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Employee from "../models/employee.model.js";
 import { employeeSchema } from "../Schema/schema.js";
 import catchErrors from "../utils/catchErrors.js";
@@ -75,5 +76,32 @@ export const getAllEmployeesHandler = catchErrors(async (req, res) => {
     success: true,
     data: employees,
     message: "Employee data retrieved successfully",
+  });
+});
+
+export const getEmployeeByIdHandler = catchErrors(async (req, res) => {
+  const id = req.params?.id;
+
+  let employee;
+
+  if (mongoose.isValidObjectId(id)) {
+    employee = await Employee.findById(id);
+  }
+
+  if (!employee && typeof id === "string" && id.length === 4) {
+    employee = await Employee.findOne({ employeeId: id });
+  }
+
+  if (!employee) {
+    return res.status(404).json({
+      success: false,
+      message: "Employee not found",
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Employee retrieved successfully",
+    data: employee,
   });
 });
