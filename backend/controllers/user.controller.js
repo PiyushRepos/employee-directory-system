@@ -35,6 +35,7 @@ export const registerHandler = catchErrors(async (req, res) => {
       fullName,
       email,
       password,
+      role: "user",
     });
 
     await newUser.save();
