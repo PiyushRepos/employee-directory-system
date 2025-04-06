@@ -232,8 +232,7 @@ export const exportEmployeesDataHandler = catchErrors(async (req, res) => {
 
   if (type === "csv") {
     try {
-      const opts = { fields };
-      const parser = new Parser(opts);
+      const parser = new Parser({ fields });
       const csv = parser.parse(employees);
 
       res.header("Content-Type", "text/csv");
@@ -250,9 +249,6 @@ export const exportEmployeesDataHandler = catchErrors(async (req, res) => {
   }
 
   res.header("Content-Type", "application/json");
-  return res.status(200).json({
-    success: true,
-    json: employees,
-    message: "Employees data exported successfully",
-  });
+  res.attachment("employees.json");
+  return res.status(200).json({ employees });
 });
