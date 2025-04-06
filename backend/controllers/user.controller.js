@@ -111,17 +111,9 @@ export const loginHandler = catchErrors(async (req, res) => {
 });
 
 export const getCurrentLoggedInUserHandler = catchErrors(async (req, res) => {
-  try {
-    return res
-      .status(200)
-      .json({ success: true, data: req.user, message: "Welcome back" });
-  } catch (error) {
-    console.error("Error while getting logged in user", error);
-    res.status(500).json({
-      success: false,
-      message: "Something went wrong. Internal server error.",
-    });
-  }
+  return res
+    .status(200)
+    .json({ success: true, data: req.user, message: "Welcome back" });
 });
 
 export const logoutHandler = async (req, res) => {
