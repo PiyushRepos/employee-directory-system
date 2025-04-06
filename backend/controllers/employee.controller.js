@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import Employee from "../models/employee.model.js";
-import { employeeSchema } from "../Schema/schema.js";
+import { employeeSchema, updateEmployeeSchema } from "../Schema/schema.js";
 import catchErrors from "../utils/catchErrors.js";
 
 export const createEmployeeHandler = catchErrors(async (req, res) => {
@@ -10,7 +10,7 @@ export const createEmployeeHandler = catchErrors(async (req, res) => {
       .json({ success: false, message: "Only admins can create employees" });
   }
 
-  if (!req.body) {
+  if (!req.body || Object.keys(req.body).length === 0) {
     return res
       .status(400)
       .json({ success: false, message: "All fields are required" });
@@ -103,5 +103,68 @@ export const getEmployeeByIdHandler = catchErrors(async (req, res) => {
     success: true,
     message: "Employee retrieved successfully",
     data: employee,
+  });
+});
+
+export const updateEmployeeByIdHandler = catchErrors(async (req, res) => {
+  if (!req.isAdmin) {
+    return res
+      .status(403)
+      .json({ success: false, message: "Only admins can update employees" });
+  }
+
+  if (!req.body || Object.keys(req.body).length === 0) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Updation fields are required" });
+  }
+
+  const id = req.params?.id;
+  let employee;
+
+  if (mongoose.isValidObjectId(id)) {
+    employee = await Employee.findById(id);
+  }
+
+  if (!employee && typeof id === "string" && id.length === 4) {
+    employee = await Employee.findOne({ employeeId: id });
+  }
+
+  if (!employee) {
+    return res.status(404).json({
+      success: false,
+      message: "Employee not found",
+    });
+  }
+
+  const data = updateEmployeeSchema.safeParse(req.body);
+  if (!data.success) {
+    return res.status(400).json({
+      success: false,
+      error: { message: data.error.issues[0].message },
+    });
+  }
+
+  const {
+    data: { name, email, phoneNumber, department, position, joiningDate },
+  } = data;
+
+  const updatedEmployee = await Employee.findByIdAndUpdate(
+    employee._id,
+    {
+      name: name || employee.name,
+      email: email || employee.email,
+      phoneNumber: phoneNumber || employee.phoneNumber,
+      position: position || employee.position,
+      department: department || employee.department,
+      joiningDate: joiningDate || employee.joiningDate,
+    },
+    { new: true }
+  );
+
+  return res.status(200).json({
+    success: true,
+    message: "Employee information updated successfully",
+    data: updatedEmployee,
   });
 });

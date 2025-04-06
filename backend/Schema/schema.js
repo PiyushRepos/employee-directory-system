@@ -56,3 +56,5 @@ export const employeeSchema = z
     ),
   })
   .required();
+
+export const updateEmployeeSchema = employeeSchema.partial();

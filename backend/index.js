@@ -22,9 +22,13 @@ app.use("/api/employees", employeeRouter);
 app.use((err, req, res, next) => {
   console.error("🔥 Error:", err);
 
-  return res
-    .status(500)
-    .json({ success: false, message: "Internal Server Erorr" });
+  return res.status(500).json({
+    success: false,
+    message:
+      process.env.NODE_ENV === "production"
+        ? "Internal Server Error"
+        : err.message,
+  });
 });
 
 // Starting the server

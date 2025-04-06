@@ -3,7 +3,7 @@ import catchErrors from "../utils/catchErrors.js";
 import User from "../models/user.model.js";
 
 export const registerHandler = catchErrors(async (req, res) => {
-  if (!req.body) {
+  if (!req.body || Object.keys(req.body).length === 0) {
     return res
       .status(400)
       .json({ success: false, message: "All fields are required" });
@@ -53,7 +53,7 @@ export const registerHandler = catchErrors(async (req, res) => {
 });
 
 export const loginHandler = catchErrors(async (req, res) => {
-  if (!req.body) {
+  if (!req.body || Object.keys(req.body).length === 0) {
     return res
       .status(400)
       .json({ success: false, message: "All fields are required" });
