@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 
 // api routes
 app.use("/api", userRouter);
-app.use("/api", employeeRouter);
+app.use("/api/employees", employeeRouter);
 
 app.use((err, req, res, next) => {
   console.error("🔥 Error:", err);

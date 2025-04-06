@@ -59,3 +59,21 @@ export const createEmployeeHandler = catchErrors(async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 });
+
+export const getAllEmployeesHandler = catchErrors(async (req, res) => {
+  const employees = await Employee.find({});
+
+  if (employees.length === 0) {
+    return res.status(200).json({
+      success: true,
+      message: "There are no employees in the database",
+      data: employees,
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    data: employees,
+    message: "Employee data retrieved successfully",
+  });
+});

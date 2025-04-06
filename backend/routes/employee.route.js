@@ -1,10 +1,16 @@
 import { Router } from "express";
-import { createEmployeeHandler } from "../controllers/employee.controller.js";
+import {
+  createEmployeeHandler,
+  getAllEmployeesHandler,
+} from "../controllers/employee.controller.js";
 import verifyJwt from "../middlewares/verifyJwtToken.js";
 const router = Router();
 
-// prefix - /api
+// prefix - /api/employees
 
-router.route("/employees").post(verifyJwt, createEmployeeHandler);
+router
+  .route("/")
+  .post(verifyJwt, createEmployeeHandler)
+  .get(verifyJwt, getAllEmployeesHandler);
 
 export default router;
