@@ -10,8 +10,10 @@ import {
 import { CSVLink } from "react-csv";
 import axios from "../../../axios.js";
 import { format, parseISO } from "date-fns";
+import { useUser } from "../../context/userContext.jsx";
 
 const EmployeeFilters = ({ filters, setFilters, onAddEmployee, employees }) => {
+  const { isAdmin } = useUser();
   const departments = ["Engineering", "Sales", "HR", "Marketing"];
   const positions = [
     "Intern",
@@ -130,10 +132,12 @@ const EmployeeFilters = ({ filters, setFilters, onAddEmployee, employees }) => {
               <Button variant="primary" onClick={onAddEmployee}>
                 Add Employee
               </Button>
-              <ExportDropdown
-                exportData={exportData}
-                handleJsonExport={handleJsonExport}
-              />
+              {isAdmin && (
+                <ExportDropdown
+                  exportData={exportData}
+                  handleJsonExport={handleJsonExport}
+                />
+              )}
             </ButtonGroup>
           </Col>
         </Row>
