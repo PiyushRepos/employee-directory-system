@@ -1,35 +1,37 @@
+// app.js
 import "dotenv/config";
 import express from "express";
-const app = express();
-import connectToDb from "./config/db.js";
-import userRouter from "./routes/user.route.js";
-import employeeRouter from "./routes/employee.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import userRouter from "./routes/user.route.js";
+import employeeRouter from "./routes/employee.route.js";
 
+const app = express();
+
+// middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [`${process.env.FRONTEND_URL}`, "http://localhost:5173"],
+    origin: [process.env.FRONTEND_URL, "http://localhost:5173"],
     credentials: true,
   })
 );
 
-// index route
+// test route
 app.get("/", (req, res) => {
-  res.json({ status: "Sucesss", message: "All is well." });
+  res.json({ status: "Success", message: "All is well." });
 });
 
-// api routes
+// routers
 app.use("/api", userRouter);
 app.use("/api/employees", employeeRouter);
 
+// error handler
 app.use((err, req, res, next) => {
   console.error("🔥 Error:", err);
-
-  return res.status(500).json({
+  res.status(500).json({
     success: false,
     message:
       process.env.NODE_ENV === "production"
@@ -38,9 +40,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Starting the server
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, async () => {
-  console.log(`Server started at http://localhost:${PORT}`);
-  await connectToDb();
-});
+export default app;
