@@ -91,8 +91,8 @@ export const loginHandler = catchErrors(async (req, res) => {
     const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
     };
 
     const loggedInUser = await User.findById(user._id).select("-password");
