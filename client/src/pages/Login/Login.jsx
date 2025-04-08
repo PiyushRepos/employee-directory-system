@@ -9,9 +9,8 @@ import {
   Spinner,
 } from "react-bootstrap";
 import axios from "../../../axios.js";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../../context/userContext.jsx";
-import "./Login.css";
 
 const LoginPage = () => {
   const { loginUser } = useUser();
@@ -46,8 +45,8 @@ const LoginPage = () => {
 
   return (
     <Container className="myMt">
-      <Row className="justify-content-center">
-        <Col lg={5}>
+      <Row className="justify-content-md-center">
+        <Col md={6}>
           <h2 className="mb-4 fw-bold text-center">Login to EDS</h2>
           {errorMsg && <Alert variant="danger">{errorMsg}</Alert>}
           {success && <Alert variant="success">Login successful!</Alert>}
@@ -98,6 +97,15 @@ const LoginPage = () => {
                 "Login"
               )}
             </Button>
+            <div className="text-center mt-3">
+              Do not have an account?{" "}
+              <Link
+                to="/register"
+                style={{ color: "black", textDecoration: "underline" }}
+              >
+                Register
+              </Link>
+            </div>
           </Form>
         </Col>
       </Row>

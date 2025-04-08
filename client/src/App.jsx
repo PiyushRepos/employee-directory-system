@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import Register from "./pages/Register/Register.jsx";
 import DashboardPage from "./pages/Dashboard/Dashboard.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import RegisterPage from "./pages/Register/Register.jsx";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/dashboard"
           element={
