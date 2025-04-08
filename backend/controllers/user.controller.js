@@ -117,14 +117,8 @@ export const getCurrentLoggedInUserHandler = catchErrors(async (req, res) => {
 });
 
 export const logoutHandler = async (req, res) => {
-  const options = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "strict" : "none",
-  };
-
   return res
     .status(200)
-    .clearCookie("accessToken", options)
+    .clearCookie("accessToken")
     .json({ success: true, message: "User logged out successfully" });
 };
