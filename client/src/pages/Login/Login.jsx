@@ -15,7 +15,8 @@ import { useUser } from "../../context/userContext.jsx";
 const LoginPage = () => {
   const { loginUser } = useUser();
   const navigate = useNavigate();
-
+  const { isAuthenticated } = useUser();
+  if (isAuthenticated) navigate("/dashboard");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
