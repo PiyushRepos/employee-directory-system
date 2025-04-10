@@ -9,7 +9,7 @@ import { UserProvider } from "./context/userContext.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <UserProvider>
-      <BrowserRouter basename="/employee-directory-system/">
+      <BrowserRouter>
         <App />
       </BrowserRouter>
     </UserProvider>
